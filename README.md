@@ -148,5 +148,6 @@ Below are the main API endpoints for managing cafes and employees.
 - **Real-Time Features**: Implement background services for real-time notifications (e.g., order updates).
 - **Performance Enhancements**: Introduce caching, rate-limiting, and logging for better scalability.
 - **Testing**: Develop unit and integration tests to ensure code reliability and maintainability.
+- **Storage Services**: Use Cloud Storage Services for save simage and files. (AWS S3, Google Cloud Storage, Azure Blob Storage) 
 
 ---
