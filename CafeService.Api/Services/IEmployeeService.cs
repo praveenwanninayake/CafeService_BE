@@ -29,6 +29,7 @@ namespace CafeService.Api.Services
             {
                 Id = d.Id,
                 Name = d.Name,
+                Gender=d.Gender.ToString(),
                 EmailAddress = d.EmailAddress,
                 PhoneNumber = d.PhoneNumber,
                 DaysWorked = d.StartDate.HasValue ? (int)Math.Ceiling((DateTime.UtcNow - d.StartDate.Value).TotalDays): 0,

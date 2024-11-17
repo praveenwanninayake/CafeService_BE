@@ -19,6 +19,7 @@ namespace CafeService.Api.Services
         Task<Guid?> Insert(Cafe cafe);
         Task<bool> Update(Cafe cafe);
         Task<bool> Delete(Cafe cafe);
+        Task<List<DDListModel>> DDListGetCafe();
     }
     public class CafeServiceImplement : ICafeService
     {
@@ -109,6 +110,16 @@ namespace CafeService.Api.Services
                     return false;
                 }
             }
+        }
+
+        public async Task<List<DDListModel>> DDListGetCafe()
+        {
+            return (from d in _dbContext.Cafes
+                    select new DDListModel()
+                    {
+                        key = d.Id.ToString(),
+                        value = d.Name,
+                    }).ToList();
         }
     }
 }

@@ -48,5 +48,6 @@ namespace CafeService.Api.Models
         {
             public PaginationInfo Pagination { get; set; }
         }
+
     
 }

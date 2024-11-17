@@ -47,17 +47,19 @@ namespace CafeService.Api.Models
         [MaxLength(9)]
         [RegularExpression(@"^UI[a-zA-Z0-9]{7}$", ErrorMessage = "ID must be in the format 'UIXXXXXXX'.")]
         public new string? Id { get; set; }
-
+        [Required]
         [MaxLength(100)]
         public string? Name { get; set; }
-
+        [Required]
         [EmailAddress]
         [MaxLength(150)]
         public string? EmailAddress { get; set; }
+        [Required]
 
         [RegularExpression(@"^[89]\d{7}$", ErrorMessage = "Phone number must start with 8 or 9 and be 8 digits long.")]
         public string? PhoneNumber { get; set; }
-        public Gender? Gender { get; set; }
+        [Required]
+        public int Gender { get; set; }
         public DateTime? StartDate { get; set; }
         public Guid? CafeId { get; set; }
     }

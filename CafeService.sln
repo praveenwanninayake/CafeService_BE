@@ -8,9 +8,6 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{313D8EC2-BA27-4BFF-9316-C4EDABB29E97}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{C97CD5CD-0743-488E-A38D-8724B92ACD02}"
-	ProjectSection(SolutionItems) = preProject
-		CafeService.Infrastructure\Class1.cs = CafeService.Infrastructure\Class1.cs
-	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -32,7 +32,7 @@ namespace CafeService.Api.Models
         [MaxLength(255)]
         public string Description { get; set; }
 
-        public string? Logo { get; set; } // Optional field
+        public IFormFile? Logo { get; set; } // Optional field
 
         [Required]
         [MaxLength(150)]
@@ -52,7 +52,7 @@ namespace CafeService.Api.Models
         [MaxLength(255)]
         public string Description { get; set; }
 
-        public string? Logo { get; set; } // Optional field
+        public IFormFile? Logo { get; set; } // Optional field
 
         [Required]
         [MaxLength(150)]
@@ -65,4 +65,10 @@ namespace CafeService.Api.Models
         [Required]
         public Guid Id { get; set; }
     }
+    public class DDListModel
+    {
+        public string key { get; set; }
+        public string value { get; set; }
+    }
+
 }

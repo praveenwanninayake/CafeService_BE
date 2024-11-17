@@ -99,13 +99,37 @@ namespace CafeService.Api.V1.Controllers
             return Ok(response);
         }
 
+        [HttpGet]
+        [Route(API_ROUTE_NAME + "/employees/{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> GetById(string id)
+        {
+            try
+            {
+                var result = await _iEmployeeService.GetEmployeesById(id);
+                if (result == null)
+                {
+                    return Conflict("Invalid employee!");
+                }
+                return Ok(result);
+
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Access error!");
+            }
+        }
+
+
 
         [HttpPost]
         [Route(API_ROUTE_NAME + "/employee")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Insert(EmployeeInsertModel model)
+        public async Task<IActionResult> Insert([FromForm] EmployeeInsertModel model)
         {
             try
             {
@@ -140,7 +164,7 @@ namespace CafeService.Api.V1.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Update(EmployeeEditModel model)
+        public async Task<IActionResult> Update([FromForm]  EmployeeEditModel model)
         {
             try
             {
@@ -154,8 +178,8 @@ namespace CafeService.Api.V1.Controllers
                 employeeObject.EmailAddress = model.EmailAddress != null ? model.EmailAddress: employeeObject.EmailAddress;
                 employeeObject.PhoneNumber = model.PhoneNumber != null ? model.PhoneNumber : employeeObject.PhoneNumber;
                 employeeObject.Gender = model.Gender != null ? (Gender)model.Gender : employeeObject.Gender;
-                employeeObject.StartDate = model.StartDate != null ? model.StartDate : employeeObject.StartDate;
-                employeeObject.FK_CafeId = model.CafeId !=null ? model.CafeId: employeeObject.FK_CafeId;
+                employeeObject.StartDate = model.StartDate;
+                employeeObject.FK_CafeId = model.CafeId;
                 employeeObject.ModifiedDateTime = DateTime.UtcNow;
 
                 var result = await _iEmployeeService.Update(employeeObject);

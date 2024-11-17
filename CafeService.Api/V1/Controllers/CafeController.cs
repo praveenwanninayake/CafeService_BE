@@ -7,6 +7,7 @@ using System.Collections;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 using CafeService.Api.Entities;
 using static CafeService.Api.Enums.CommonResources;
+using Microsoft.AspNetCore.Hosting;
 
 namespace CafeService.Api.V1.Controllers
 {
@@ -15,9 +16,11 @@ namespace CafeService.Api.V1.Controllers
     {
         private const string API_ROUTE_NAME = "/api";
         private readonly ICafeService _iCafeService;
-        public CafeController(ICafeService iCafeService)
+        private static IWebHostEnvironment _webHostEnvironment;
+        public CafeController(ICafeService iCafeService, IWebHostEnvironment webHostEnvironment)
         {
             _iCafeService = iCafeService;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         [HttpGet]
@@ -102,13 +105,36 @@ namespace CafeService.Api.V1.Controllers
             return Ok(response);
         }
 
+        [HttpGet]
+        [Route(API_ROUTE_NAME + "/cafes/{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> GetById(Guid id)
+        {
+            try
+            {
+                var result = await _iCafeService.GetCafeById(id);
+                if (result == null)
+                {
+                    return Conflict("Invalid cafe!");
+                }
+                return Ok(result);
+
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Access error!");
+            }
+        }
+
 
         [HttpPost]
         [Route(API_ROUTE_NAME + "/cafe")]
         [ProducesResponseType(StatusCodes.Status200OK)] 
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]      
-        public async Task<IActionResult> Insert(CafeInsertModel model)
+        public async Task<IActionResult> Insert([FromForm] CafeInsertModel model)
         {
             try
             {
@@ -116,7 +142,23 @@ namespace CafeService.Api.V1.Controllers
                 {
                     return Conflict("Café already exists!");                   
                 }
-               
+                string logoId = "";
+                if (model.Logo != null && model.Logo.Length > 0)
+                {
+                    logoId = $"{Guid.NewGuid()}.{model.Logo.FileName.Split('.').Last()}";
+                    string path = _webHostEnvironment.WebRootPath + "\\Logos\\cafe\\";
+
+                    if (!Directory.Exists(path))
+                    {
+                        Directory.CreateDirectory(path);
+                    }
+
+                    using (FileStream fileStream = System.IO.File.Create($"{path}{logoId}"))
+                    {
+                        await model.Logo.CopyToAsync(fileStream);
+                        fileStream.Flush();
+                    }
+                }
                 var result = await _iCafeService.Insert(new Cafe
                 {
                     Name = model.Name,
@@ -124,7 +166,7 @@ namespace CafeService.Api.V1.Controllers
                     Location = model.Location,
                     CreatedDateTime= DateTime.UtcNow,
                     ModifiedDateTime = DateTime.UtcNow,
-                    Logo= null
+                    Logo= logoId
                 });
                 return result!=null?Ok("Successfully inserted!"): StatusCode(500,"Insert error!");
 
@@ -140,7 +182,7 @@ namespace CafeService.Api.V1.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Update(CafeEditModel model)
+        public async Task<IActionResult> Update([FromForm]  CafeEditModel model)
         {
             try
             {
@@ -150,10 +192,30 @@ namespace CafeService.Api.V1.Controllers
                     return Conflict("Invalid cafe!");
                 }
 
+                string logoId = "";
+                if (model.Logo != null && model.Logo.Length > 0)
+                {
+                    logoId = $"{Guid.NewGuid()}.{model.Logo.FileName.Split('.').Last()}";
+                    string path = _webHostEnvironment.WebRootPath + "\\Logos\\cafe\\";
+
+                    if (!Directory.Exists(path))
+                    {
+                        Directory.CreateDirectory(path);
+                    }
+
+                    System.IO.File.Delete($"{path}{logoId}");
+
+                    using (FileStream fileStream = System.IO.File.Create($"{path}{logoId}"))
+                    {
+                        await model.Logo.CopyToAsync(fileStream);
+                        fileStream.Flush();
+                    }
+                }
+
                 cafeObject.Name = model.Name != null ? model.Name : cafeObject.Name;
                 cafeObject.Description = model.Description != null ? model.Description : cafeObject.Description;
                 cafeObject.Location = model.Location != null ? model.Location : cafeObject.Location;
-                cafeObject.Logo = model.Logo != null ? model.Logo : cafeObject.Logo;               
+                cafeObject.Logo = logoId != "" ? logoId : cafeObject.Logo;               
                 cafeObject.ModifiedDateTime = DateTime.UtcNow;
 
                 var result = await _iCafeService.Update(cafeObject);
@@ -191,7 +253,26 @@ namespace CafeService.Api.V1.Controllers
             }
         }
 
+
+        [HttpGet]
+        [Route(API_ROUTE_NAME + "/cafe-list")]
+        public async Task<IActionResult> DDListGetCafe()
+        {
+            try
+            {
+                var result = await _iCafeService.DDListGetCafe();
+
+                var response = new DataResponse<List<DDListModel>>
+                {
+                    Data = result,
+                };
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Delete error!");
+            }
+        }
+
     }
-
-
 }
