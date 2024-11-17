@@ -130,7 +130,7 @@ Please refer API doc for more info:
 - URL- http://localhost:5052/api/cafe-list
 
 
-```
+
 
 #### Employee Controller
 
@@ -150,7 +150,7 @@ Please refer API doc for more info:
 - DeleteEmployee - HTTP DELETE
 - URL- http://localhost:5052/api/employee
 
-```
+
 
 ## Further Improvements
 
