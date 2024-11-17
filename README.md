@@ -108,8 +108,9 @@ Following APIs are exposed as per the requirement.
 
 Please refer API doc for more info:
 ```
-#### Employee Controller
+#### Cafe Controller
 
+````
 - GetAllCafe - HTTP GET
 - URL- http://localhost:5052/api/cafes?page=1&items_per_page=10&location=
 
@@ -127,10 +128,12 @@ Please refer API doc for more info:
 
 - GetCafe - HTTP GET
 - URL- http://localhost:5052/api/cafe-list
+- 
+```
 
+#### Employee Controller
 
-#### Cafe Controller
-
+```
 - GetAllEmployee - HTTP GET
 - URL- http://localhost:5052/api/employees?page=1&items_per_page=10
 
@@ -145,7 +148,6 @@ Please refer API doc for more info:
 
 - DeleteEmployee - HTTP DELETE
 - URL- http://localhost:5052/api/employee
-
 
 ```
 
