@@ -150,6 +150,3 @@ Below are the main API endpoints for managing cafes and employees.
 - **Testing**: Develop unit and integration tests to ensure code reliability and maintainability.
 
 ---
-
-This README provides a comprehensive guide to setting up and running the backend. As the app evolves, you can continue adding new instructions or features to keep this document up to date!
-
