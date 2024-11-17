@@ -107,7 +107,7 @@ http://localhost:5052/swagger/index.html
 Following APIs are exposed as per the requirement.
 
 Please refer API doc for more info:
-```
+
 #### Cafe Controller
 
 ````
